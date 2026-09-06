@@ -1,38 +1,38 @@
-# Memory Index
+# Memory Routing Index
 
-Este é o mapa principal da memória persistente.
+Este arquivo é um **cache de roteamento**, não uma taxonomia obrigatória.
 
-## Leitura inicial
+## Regra
 
-Para toda tarefa complexa, começar por:
-1. `memory/active_context.md`
-2. `tasks/plan.md`
-3. os arquivos de domínio relevantes listados abaixo
+A estrutura real do vault pode mudar conforme o agente aprende e conforme os padrões de recuperação evoluem.
 
-## Memória operacional
+Antes de usar este índice como verdade:
+1. descubra a estrutura atual do repositório;
+2. valide os caminhos;
+3. use `memory-manager` para localizar notas canônicas;
+4. atualize este arquivo somente se um ponteiro estável realmente reduzir o custo de retrieval.
 
-- `memory/active_context.md` — foco atual, último estado e próximos passos.
-- `memory/system_model.md` — modelo interligado do sistema.
-- `memory/decisions.md` — decisões importantes e justificativas.
-- `memory/lessons.md` — aprendizados reutilizáveis.
-- `memory/failed_attempts.md` — tentativas que falharam e o que ensinaram.
+## O que deve aparecer aqui
 
-## Pesquisa
+Somente ponteiros de alto valor, por exemplo:
+- estado ativo atual;
+- plano ativo;
+- notas canônicas muito reutilizadas;
+- índices semânticos/relacionais disponíveis;
+- aliases de áreas reorganizadas.
 
-- `research/source_ledger.md` — registro das fontes consultadas e do que cada uma sustentou.
-- `research/findings.md` — descobertas relevantes da investigação.
-- `research/knowledge_graph.md` — relações entre conceitos, componentes e evidências.
+Não liste todo arquivo do repositório.
 
-## Execução
+## Política de manutenção
 
-- `tasks/plan.md` — plano atual.
-- `tasks/progress.md` — andamento cronológico.
-- `tasks/verification.md` — critérios e resultados de validação.
+- prefira atualizar ponteiro existente;
+- remova ponteiros obsoletos;
+- preserve aliases após reorganização;
+- não crie seções por domínio só porque um domínio apareceu uma vez;
+- deixe a taxonomia emergir do uso.
 
-## Skills
+## Bootstrap atual
 
-- `skills/memory-manager/SKILL.md` — criar, atualizar e recuperar memória.
-- `skills/deep-investigator/SKILL.md` — investigar de múltiplos ângulos e seguir pistas.
-- `skills/planner/SKILL.md` — decompor trabalho e manter o plano.
-- `skills/verifier/SKILL.md` — impedir conclusão sem verificação.
-- `skills/knowledge-linker/SKILL.md` — ligar novos fatos ao modelo existente.
+A estrutura anterior em `memory/`, `research/` e `tasks/` pode conter material útil, mas é **legado**, não contrato permanente.
+
+Use as skills adaptativas em `skills/` para decidir como reutilizar, consolidar ou reorganizar esse conteúdo.
