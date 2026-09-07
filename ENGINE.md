@@ -99,6 +99,18 @@ O repositório **não** deve guardar:
 | [skills/](./skills/) | capacidades declarativas | Hermes/OpenViking Skill |
 | [upstream/](./upstream/) | snapshots/referências de origem | resources/provenance |
 
+## Escopo real dos context files no Hermes
+
+A distribuição não deve pressupor que todos os Markdown do profile são injetados automaticamente.
+
+- `SOUL.md`: Hermes carrega **somente de `HERMES_HOME/SOUL.md`**.
+- `AGENTS.md`: Hermes descobre a partir do **CWD/projeto**; não é um contrato global do profile apenas por existir no `HERMES_HOME`.
+- arquivos como `ENGINE.md` e `MEMORY_INDEX.md`: são conhecimento distribuído, recuperado sob demanda pelas ferramentas do agente.
+
+Por isso `SOUL.md` contém um bootstrap explícito: em tarefa complexa, se o CWD não for este repositório, o agente recupera `AGENTS.md`, `ENGINE.md` e `MEMORY_INDEX.md` a partir do próprio `HERMES_HOME`, depois carrega `adaptive-orchestrator`.
+
+Quando o CWD **for** o repositório, `AGENTS.md` entra pelo mecanismo nativo de project context e o mesmo contrato continua válido.
+
 ### Importante: `memory/` ≠ Hermes `memories/`
 
 A pasta versionada **`memory/`** deste repositório contém conhecimento técnico do projeto e pode ser distribuída.
