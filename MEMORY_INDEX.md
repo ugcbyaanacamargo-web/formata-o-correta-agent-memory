@@ -37,11 +37,20 @@ Arquitetura: [ENGINE.md](./ENGINE.md).
 - [upstream/](./upstream/) = referências preservadas, não estado ativo.
 - `memories/` e `sessions/` = runtime privado Hermes; não entram no GitHub.
 
+## Autoridade em caso de conflito
+
+1. estado observado atual;
+2. fonte primária/específica aplicável;
+3. decisão canônica do GitHub;
+4. memória de runtime/sessão como pista contextual.
+
+Memória lembrada não altera automaticamente a verdade versionada. Mudança de decisão exige evidência e atualização explícita.
+
 ## Política
 
 - prefira atualizar ponteiro existente;
 - remova ponteiros obsoletos;
 - preserve aliases quando houver reorganização;
 - não liste todo arquivo do repositório;
-- não crie uma taxonomia nova sem ganho real de retrieval;
-- quando OpenViking estiver ativo, use sua recuperação L0/L1/L2 em vez de replicar resumos manualmente.
+- não crie taxonomia nova sem ganho real de retrieval;
+- quando OpenViking estiver ativo, use recuperação L0/L1/L2 em vez de replicar resumos manualmente.
