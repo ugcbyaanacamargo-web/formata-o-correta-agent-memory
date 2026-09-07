@@ -1,0 +1,17 @@
+name: formatacao-correta
+version: 0.1.0
+description: "Agente especializado em reconstrução limpa e verificável de plataforma/Windows, com memória técnica versionada no GitHub."
+
+# Explicitly ship the durable operating contract and project knowledge.
+# Hermes runtime memories/sessions remain local and are excluded by .gitignore.
+distribution_owned:
+  - distribution.yaml
+  - SOUL.md
+  - AGENTS.md
+  - ENGINE.md
+  - MEMORY_INDEX.md
+  - README.md
+  - skills/
+  - memory/
+  - research/
+  - tasks/
