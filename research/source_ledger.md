@@ -69,3 +69,17 @@ Registro estruturado de fontes usadas em investigações.
 **Data consultada:** 2026-09-06  
 **Assunto:** arquitetura de contexto.  
 **Sustenta:** parse → semantic processing → index; intent → hierarchical retrieval → rerank.
+
+### SRC-0009 — GitHub MCP Server oficial
+**URL:** https://github.com/github/github-mcp-server  
+**Autor/organização:** GitHub  
+**Data consultada:** 2026-09-06  
+**Assunto:** MCP oficial do GitHub.  
+**Sustenta:** acesso a repositórios/PRs/issues/actions via MCP; servidor remoto e local; práticas de autenticação; segredos não devem ser versionados.
+
+### SRC-0010 — Hermes MCP configuration
+**URL:** https://github.com/NousResearch/hermes-agent/blob/main/website/docs/reference/mcp-config-reference.md  
+**Autor/organização:** Nous Research  
+**Data consultada:** 2026-09-06  
+**Assunto:** MCP nativo do Hermes.  
+**Sustenta:** `mcp_servers`, transporte remoto/stdio, `auth: oauth`, armazenamento local de credenciais e login no runtime.
