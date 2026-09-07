@@ -105,9 +105,32 @@ A pasta versionada **`memory/`** deste repositório contém conhecimento técnic
 
 A pasta de runtime Hermes **`memories/`** contém memória de usuário/sessão do agente e deve permanecer local. Ela está bloqueada no [.gitignore](./.gitignore).
 
+## Autoridade e promoção da memória
+
+Existem três níveis de autoridade:
+
+```text
+memória de sessão / recall OpenViking
+        ↓ contexto candidato
+evidência atual + fontes + resultado real
+        ↓ verificação
+GitHub canônico
+```
+
+Regras:
+1. Memória de runtime ajuda a **lembrar**, não substitui prova.
+2. Uma lembrança antiga não sobrescreve silenciosamente uma decisão em [memory/decisions.md](./memory/decisions.md).
+3. Nova evidência pode invalidar uma decisão antiga, mas a mudança deve ser explícita e versionada.
+4. Conhecimento novo só é promovido ao GitHub depois de interpretação/deduplicação pelo agente principal.
+5. Em conflito, use:
+   - evidência recente e específica;
+   - fonte de maior autoridade;
+   - estado observado do equipamento;
+   - decisão canônica versionada enquanto não houver prova que a substitua.
+
 ## Retrieval em três níveis
 
-Aplicamos o princípio do OpenViking sem fingir que seu servidor já está ativo:
+Aplicamos o princípio do OpenViking sem fingir que seu servidor já está ativo.
 
 ### Nível 0 — roteamento
 Leia primeiro:
@@ -206,6 +229,6 @@ Para mudanças estruturais:
 
 ## Fontes arquiteturais
 
-- NousResearch/hermes-agent — documentação de Features, Persistent Memory, Profiles e Profile Distributions.
-- volcengine/OpenViking — arquitetura, Context Types, L0/L1/L2, Retrieval, Session e integração Hermes.
+- NousResearch/hermes-agent — Features, Persistent Memory, Profiles e Profile Distributions.
+- volcengine/OpenViking — Architecture, Context Types, L0/L1/L2, Retrieval, Session e integração Hermes.
 - [research/source_ledger.md](./research/source_ledger.md) mantém a rastreabilidade usada pelo projeto.
