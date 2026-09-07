@@ -83,3 +83,10 @@ Registro estruturado de fontes usadas em investigações.
 **Data consultada:** 2026-09-06  
 **Assunto:** MCP nativo do Hermes.  
 **Sustenta:** `mcp_servers`, transporte remoto/stdio, `auth: oauth`, armazenamento local de credenciais e login no runtime.
+
+### SRC-0011 — Hermes Context Files
+**URL:** https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/context-files.md  
+**Autor/organização:** Nous Research  
+**Data consultada:** 2026-09-06  
+**Assunto:** escopo de SOUL.md e AGENTS.md.  
+**Sustenta:** `SOUL.md` é carregado de `HERMES_HOME`; `AGENTS.md` é contexto do CWD/projeto e possui descoberta progressiva por diretório.
