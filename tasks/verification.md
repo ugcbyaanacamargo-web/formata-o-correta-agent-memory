@@ -29,6 +29,8 @@ Antes de concluir uma tarefa complexa:
 
 ### Contexto/retrieval
 - [x] `MEMORY_INDEX.md` roteia para canônicos.
+- [x] escopo real de `SOUL.md` vs `AGENTS.md` validado na documentação Hermes.
+- [x] bootstrap do profile funciona conceitualmente mesmo fora do CWD do repositório: SOUL instrui retrieval do HERMES_HOME + orchestrator.
 - [x] links relativos principais apontam para caminhos existentes.
 - [x] L0/L1/L2 adotado como estratégia de carregamento, sem sidecars falsos.
 - [x] Source Ledger registra fontes do motor.
