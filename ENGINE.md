@@ -203,6 +203,21 @@ Subagentes podem ser usados para ramos independentes de pesquisa/revisão, mas:
 - não devem gravar memória canônica compartilhada sem consolidação do agente principal;
 - resultados paralelos precisam voltar ao orquestrador para deduplicação e conflito.
 
+## GitHub como ferramenta do agente
+
+### Host atual — ChatGPT
+O conector GitHub do ChatGPT está ativo e é usado diretamente para leitura, branches, commits, PRs e revisão.
+
+### Runtime Hermes futuro
+O GitHub possui servidor MCP oficial (`github/github-mcp-server`) e o Hermes suporta MCP remoto/stdio.
+
+A autenticação será escolhida **no runtime**, não no repositório:
+- servidor remoto GitHub + credencial local quando necessário;
+- ou servidor local oficial GitHub MCP com fluxo próprio de autenticação;
+- OAuth remoto somente quando o host tiver a configuração de cliente exigida pelo GitHub.
+
+Não publicamos PAT, token OAuth ou header Authorization. Por isso este profile **não força um `mcp.json`/GitHub auth agora**. Isso é uma decisão de segurança e portabilidade, não ausência de integração.
+
 ## GitHub como gate
 
 Para mudanças estruturais:
