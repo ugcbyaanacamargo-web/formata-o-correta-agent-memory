@@ -36,3 +36,8 @@ Descobertas obtidas durante pesquisas e testes. Relações permanentes devem ser
 **Descoberta:** o GitHub mantém o servidor oficial `github/github-mcp-server`, com opções remota e local. A documentação alerta que OAuth remoto depende da configuração do host; PAT pode ser fornecido localmente.  
 **Fonte:** SRC-0009 / SRC-0010.  
 **Impacto:** não embutir credencial nem afirmar OAuth portátil no profile. O conector atual do ChatGPT continua sendo a ferramenta GitHub ativa; Hermes será configurado no runtime.
+
+### FND-0008 — AGENTS.md não é global só por estar no profile
+**Descoberta:** Hermes injeta `SOUL.md` exclusivamente de `HERMES_HOME`, enquanto `AGENTS.md` é descoberto a partir do CWD/projeto.  
+**Fonte:** SRC-0011.  
+**Impacto:** a distribuição não pode depender de `AGENTS.md` ser auto-carregado quando o runtime está em outra pasta. O bootstrap foi movido para `SOUL.md`, que manda recuperar os canônicos do profile e carregar o orchestrator.
