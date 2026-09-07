@@ -36,3 +36,8 @@ Registro de decisões que devem sobreviver entre sessões.
 ### DEC-20260906-07 — Motor antes da formatação
 **Decisão:** concluir a adaptação Hermes/OpenViking/GitHub antes de avançar a pesquisa operacional da reconstrução limpa.  
 **Consequência:** o PR da formatação permanece draft/dependente dessa base.
+
+### DEC-20260906-08 — Autenticação GitHub fica no runtime
+**Contexto:** o GitHub MCP oficial oferece transporte remoto/local, mas OAuth remoto depende das capacidades/configuração do host; PAT é segredo.  
+**Decisão:** não versionar token, header de autorização ou configuração OAuth presumida. O ChatGPT usa seu conector GitHub já autorizado; o Hermes receberá GitHub MCP no momento da instalação/configuração do runtime.  
+**Consequência:** a distribuição continua portátil e sem segredos, e a escolha de auth é validada no ambiente real.
