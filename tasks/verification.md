@@ -41,7 +41,7 @@ Antes de concluir uma tarefa complexa:
 - [x] documentação/branch do perfil Hermes preparada.
 - [ ] Hermes instalado/rodando localmente — **não afirmado**.
 - [ ] OpenViking server configurado — **não afirmado**.
-- [ ] GitHub MCP dentro do Hermes configurado — **não afirmado**.
+- [x] estratégia GitHub↔Hermes definida sem segredos; configuração/autenticação efetiva permanece propositalmente para o runtime.
 
 ### Promoção
 - [x] diff final revisado;
