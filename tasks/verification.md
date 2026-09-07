@@ -44,9 +44,9 @@ Antes de concluir uma tarefa complexa:
 - [ ] GitHub MCP dentro do Hermes configurado — **não afirmado**.
 
 ### Promoção
-- [ ] diff final revisado;
-- [ ] draft PR criado;
-- [ ] PR da formatação linkado como dependente;
+- [x] diff final revisado;
+- [x] draft PR #2 criado;
+- [x] PR #1 da formatação linkado como dependente;
 - [ ] merge autorizado/revisado.
 
 O motor só é considerado **promovido** quando os itens de promoção passarem. A preparação estrutural pode estar pronta sem afirmar que o runtime local já foi instalado.
