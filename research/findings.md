@@ -31,3 +31,8 @@ Descobertas obtidas durante pesquisas e testes. Relações permanentes devem ser
 **Descoberta:** commit de sessão gera resumo, extrai/deduplica memória e registra `memory_diff.json`.  
 **Fonte:** SRC-0007.  
 **Impacto:** quando OpenViking estiver ativo, aprendizados de execução podem ser promovidos com trilha de mudança em vez de simples acúmulo de texto.
+
+### FND-0007 — GitHub MCP deve ser autenticado no host
+**Descoberta:** o GitHub mantém o servidor oficial `github/github-mcp-server`, com opções remota e local. A documentação alerta que OAuth remoto depende da configuração do host; PAT pode ser fornecido localmente.  
+**Fonte:** SRC-0009 / SRC-0010.  
+**Impacto:** não embutir credencial nem afirmar OAuth portátil no profile. O conector atual do ChatGPT continua sendo a ferramenta GitHub ativa; Hermes será configurado no runtime.
