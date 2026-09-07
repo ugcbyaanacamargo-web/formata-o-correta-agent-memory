@@ -21,7 +21,7 @@ Preparar o GitHub do projeto FORMATAÇÃO CORRETA como uma **Hermes Profile Dist
 - [x] Decisão: não criar runtime/context DB próprios.
 
 ## Fase E2 — Transformar o repositório em distribuição
-**Status:** EM EXECUÇÃO.
+**Status:** PASS.
 
 - [x] criar [distribution.yaml](../distribution.yaml);
 - [x] criar [SOUL.md](../SOUL.md);
@@ -29,27 +29,28 @@ Preparar o GitHub do projeto FORMATAÇÃO CORRETA como uma **Hermes Profile Dist
 - [x] criar [.gitignore](../.gitignore) com fronteira de segredos/runtime;
 - [x] ligar [README.md](../README.md), [AGENTS.md](../AGENTS.md) e [MEMORY_INDEX.md](../MEMORY_INDEX.md);
 - [x] separar `memory/` técnico de `memories/` privado;
-- [ ] revisar todos os links e caminhos;
-- [ ] comparar branch contra `main`.
+- [x] revisar links e caminhos principais;
+- [x] comparar branch contra `main`.
 
 ## Fase E3 — Validar o contrato da distribuição
-**Status:** PENDENTE.
+**Status:** PASS para a estrutura GitHub; validação do runtime local fica separada.
 
 Critérios:
-- [ ] apenas arquivos intencionais alterados;
-- [ ] nenhum segredo/configuração privada;
-- [ ] `distribution.yaml` inclui somente paths que devem viajar com o agente;
-- [ ] documentos canônicos têm links relativos válidos;
-- [ ] nenhuma afirmação diz que Hermes/OpenViking estão rodando quando apenas estão preparados;
-- [ ] provenance/source ledger sustentam a arquitetura;
-- [ ] branch pronta para draft PR.
+- [x] apenas arquivos intencionais alterados;
+- [x] nenhum segredo/configuração privada;
+- [x] `distribution.yaml` inclui somente paths que devem viajar com o agente;
+- [x] documentos canônicos têm links relativos principais válidos;
+- [x] nenhuma afirmação diz que Hermes/OpenViking estão rodando quando apenas estão preparados;
+- [x] provenance/source ledger sustentam a arquitetura;
+- [x] branch pronta para draft PR.
 
 ## Fase E4 — Promoção
-**Status:** PENDENTE.
+**Status:** EM REVIEW — draft PR #2 criado.
 
-- [ ] abrir draft PR do motor;
-- [ ] review;
-- [ ] resolver findings;
+- [x] abrir draft PR do motor (#2);
+- [x] review estrutural do diff;
+- [x] linkar PR #1 como dependente;
+- [ ] validação opcional em runtime Hermes real;
 - [ ] somente depois marcar ready/merge quando autorizado.
 
 ## Fase seguinte — Reconstrução limpa
