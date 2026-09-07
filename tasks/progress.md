@@ -52,3 +52,8 @@
 - revisar arquivos alterados e escopo;
 - criar draft PR da adaptação do motor;
 - linkar PR da formatação como dependente.
+
+- Draft PR #2 criado: adaptação Hermes + OpenViking.
+- Diff revisado: 16 arquivos, todos dentro do escopo esperado.
+- PR #1 da reconstrução limpa foi formalmente marcado como dependente do PR #2.
+- Nenhuma instalação local de Hermes/OpenViking foi alegada; runtime permanece etapa separada.
