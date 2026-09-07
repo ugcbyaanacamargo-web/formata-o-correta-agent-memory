@@ -1,38 +1,47 @@
 # Memory Routing Index
 
-Este arquivo é um **cache de roteamento**, não uma taxonomia obrigatória.
+Este arquivo é o **roteador L0 do projeto**: aponta para contexto de alto valor sem obrigar o agente a carregar todo o repositório.
 
-## Regra
+Arquitetura: [ENGINE.md](./ENGINE.md).
 
-A estrutura real do vault pode mudar conforme o agente aprende e conforme os padrões de recuperação evoluem.
+## Entrada rápida
 
-Antes de usar este índice como verdade:
-1. descubra a estrutura atual do repositório;
-2. valide os caminhos;
-3. use `memory-manager` para localizar notas canônicas;
-4. atualize este arquivo somente se um ponteiro estável realmente reduzir o custo de retrieval.
+| Pergunta | Leia |
+|---|---|
+| Qual é o objetivo/fase atual? | [memory/active_context.md](./memory/active_context.md) |
+| Quais decisões não devem ser rediscutidas sem nova evidência? | [memory/decisions.md](./memory/decisions.md) |
+| Como os componentes se relacionam? | [memory/system_model.md](./memory/system_model.md) |
+| Qual é o plano atual? | [tasks/plan.md](./tasks/plan.md) |
+| Quais gates precisam passar? | [tasks/verification.md](./tasks/verification.md) |
+| Que descobertas já existem? | [research/findings.md](./research/findings.md) |
+| Quais fontes sustentam isso? | [research/source_ledger.md](./research/source_ledger.md) |
+| Quais relações ajudam a expandir o contexto? | [research/knowledge_graph.md](./research/knowledge_graph.md) |
+| O que já falhou? | [memory/failed_attempts.md](./memory/failed_attempts.md) |
+| Que padrões reutilizáveis aprendemos? | [memory/lessons.md](./memory/lessons.md) |
+| Que skill usar? | [skills/](./skills/) |
 
-## O que deve aparecer aqui
+## Ordem de recuperação
 
-Somente ponteiros de alto valor, por exemplo:
-- estado ativo atual;
-- plano ativo;
-- notas canônicas muito reutilizadas;
-- índices semânticos/relacionais disponíveis;
-- aliases de áreas reorganizadas.
+1. Localize a entidade/decisão diretamente mencionada.
+2. Leia a nota canônica.
+3. Expanda pelo [knowledge graph](./research/knowledge_graph.md) somente quando a relação puder mudar a decisão.
+4. Abra fonte/L2 detalhado apenas quando necessário.
+5. Pare antes de carregar vizinhança irrelevante.
 
-Não liste todo arquivo do repositório.
+## Separação de contextos
 
-## Política de manutenção
+- [memory/](./memory/) = conhecimento técnico versionado do projeto.
+- [research/](./research/) = evidência externa, descobertas e proveniência.
+- [tasks/](./tasks/) = estado operacional e gates.
+- [skills/](./skills/) = capacidades.
+- [upstream/](./upstream/) = referências preservadas, não estado ativo.
+- `memories/` e `sessions/` = runtime privado Hermes; não entram no GitHub.
+
+## Política
 
 - prefira atualizar ponteiro existente;
 - remova ponteiros obsoletos;
-- preserve aliases após reorganização;
-- não crie seções por domínio só porque um domínio apareceu uma vez;
-- deixe a taxonomia emergir do uso.
-
-## Bootstrap atual
-
-A estrutura anterior em `memory/`, `research/` e `tasks/` pode conter material útil, mas é **legado**, não contrato permanente.
-
-Use as skills adaptativas em `skills/` para decidir como reutilizar, consolidar ou reorganizar esse conteúdo.
+- preserve aliases quando houver reorganização;
+- não liste todo arquivo do repositório;
+- não crie uma taxonomia nova sem ganho real de retrieval;
+- quando OpenViking estiver ativo, use sua recuperação L0/L1/L2 em vez de replicar resumos manualmente.
