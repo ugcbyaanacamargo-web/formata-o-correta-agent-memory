@@ -1,161 +1,195 @@
 ---
 name: deep-investigator
-description: Pesquisa profundamente para produzir decisões de coleta e solução sustentadas por múltiplas fontes, memória e resultados reais. Use antes de desenhar coleta, após receber resultados e sempre que uma decisão técnica depender de informação externa.
+description: Pesquisa para produzir decisão sustentada por fontes e evidência.
+version: 1.1.0
+related_skills:
+  - knowledge-retrieval
+  - planner
+  - phase-executor
+  - verifier
 ---
 
 # Decision-Oriented Deep Investigator
 
-> Adaptação de `ByteDance/deer-flow:deep-research`, `addyosmani/agent-skills:source-driven-development` e dos padrões de breadth/depth do `assafelovic/gpt-researcher`.
+> Adapta `ByteDance/deer-flow:deep-research`, `addyosmani/agent-skills:source-driven-development` e breadth/depth do GPT Researcher para ChatGPT Web.
 
 ## Missão
 
 Pesquisa não é o objetivo. **Decisão é o objetivo.**
 
-Use pesquisa profunda para sair de “talvez seja A/B/C” e chegar a uma especificação suficientemente sustentada para:
+A investigação deve convergir para um destes resultados:
 
-1. coletar exatamente o que é necessário; ou
-2. escolher e executar a solução da fase.
+1. uma **Collection Specification** que define exatamente o que falta observar; ou
+2. uma **Resolution Specification** que define exatamente a ação/solução escolhida e como verificar.
 
-## Dois modos de pesquisa
+## 1. Retrieval before repeat research
 
-### Modo A — Research for Collection
+Antes de abrir nova pesquisa externa, use `knowledge-retrieval` quando o repositório pode conter trabalho anterior relevante.
 
-Use antes do primeiro script de uma fase.
+Recupere:
+- fontes já consultadas;
+- decisões anteriores;
+- resultados de execuções;
+- aliases/relações;
+- tentativas já descartadas;
+- versões/escopos conhecidos.
 
-Objetivo: determinar antecipadamente quais evidências locais são realmente necessárias para decidir a solução.
+Não pesquise novamente o que a memória canônica já resolve, a menos que a informação possa ter mudado ou precise ser revalidada.
+
+## 2. Modo A — Research for Collection
+
+Use quando falta evidência que só o ambiente/caso real pode fornecer.
 
 Processo:
 
 1. recupere memória relevante;
-2. pesquise o comportamento esperado e as dependências;
-3. identifique quais observações discriminam entre caminhos de solução;
-4. agrupe essas observações para que uma única execução possa coletá-las;
-5. elimine coleta redundante, cosmética ou que não muda decisão;
-6. produza uma **Collection Specification** completa.
+2. pesquise comportamento esperado, dependências, versões e pré-condições;
+3. determine quais observações realmente discriminam entre caminhos de solução;
+4. agrupe essas observações para uma coleta ampla e eficiente;
+5. elimine coleta redundante/cosmética;
+6. produza a Collection Specification.
 
-A Collection Specification deve dizer, semanticamente:
+A Collection Specification deve conter semanticamente:
 
-- quais fatos precisam ser obtidos;
-- por que cada fato altera a decisão;
-- de onde o script deve obtê-lo;
-- como normalizar/serializar o resultado;
-- quais relações devem ser preservadas;
-- quais resultados mudariam a estratégia.
+- fatos necessários;
+- por que cada fato muda a decisão;
+- origem esperada do dado;
+- formato/normalização útil;
+- relações a preservar;
+- resultados que mudam a estratégia;
+- critérios para saber que a coleta foi suficiente.
 
-### Modo B — Research for Resolution
+## 3. Modo B — Research for Resolution
 
-Use depois que o resultado local retorna.
-
-Objetivo: transformar resultado real + memória + fontes em uma solução escolhida.
+Use depois que existe resultado real ou quando as fontes já são suficientes para decidir.
 
 Processo:
 
-1. interprete o resultado completo;
-2. recupere memórias ligadas às entidades e relações encontradas;
-3. pesquise os pontos decisivos revelados pelo resultado;
-4. compare o estado observado com fontes primárias e especificações atuais;
-5. siga referências e termos novos somente quando mudarem a decisão;
-6. resolva contradições entre fontes por autoridade, versão, escopo e data;
-7. escolha a menor solução **completa** que leva a fase ao estado desejado;
-8. produza uma **Resolution Specification** pronta para virar script.
+1. leia o resultado completo;
+2. use `knowledge-retrieval` para recuperar contexto ligado às entidades encontradas;
+3. pesquise somente os pontos que ainda mudam a decisão;
+4. compare estado observado com fontes primárias/especificações atuais;
+5. resolva contradições por autoridade, versão, escopo e data;
+6. escolha a solução **completa e proporcional** ao nível real do problema;
+7. produza Resolution Specification pronta para execução/verificação.
 
-Não entregue uma coleção de alternativas quando a evidência permite escolher.
+Não entregue uma lista de alternativas quando a evidência permite escolher.
 
-## Estratégia de pesquisa
+## 4. Breadth — cobertura
 
-A largura e a profundidade são adaptativas.
+Abra ramos independentes apenas quando cada um pode alterar a decisão.
 
-### Breadth — cobertura
+Possíveis ângulos abstratos:
+- especificação/autoria oficial;
+- documentação do fornecedor;
+- dependências/pré-requisitos;
+- implementação/código oficial;
+- comportamento observado;
+- validação/reversão;
+- incompatibilidades de versão.
 
-Abra ramos paralelos apenas para ângulos independentes que possam mudar a decisão. Exemplos abstratos:
+Não use número fixo de buscas como ritual.
 
-- especificação oficial;
-- implementação/documentação do fornecedor;
-- dependências ou pré-requisitos;
-- comportamento observado/erros conhecidos;
-- métodos de validação e reversão.
+## 5. Depth — aprofundamento
 
-Não use “3–5 buscas” como ritual. Use quantos ramos forem necessários para cobrir a decisão sem redundância.
+Aprofunde quando:
+- fonte primária aponta para outra especificação decisiva;
+- surgiu termo/componente que muda a solução;
+- comportamento varia por versão;
+- fontes relevantes contradizem;
+- falta dado indispensável para Collection/Resolution Specification.
 
-### Depth — aprofundamento
+Pare quando o aprofundamento deixa de mudar a decisão.
 
-Aprofunde um ramo quando:
+## 6. Hierarquia de evidência
 
-- uma fonte primária referencia outra especificação decisiva;
-- surgiu um termo/componente que altera a solução;
-- versões diferentes produzem comportamento diferente;
-- existe contradição entre fontes;
-- falta um dado necessário para especificar a coleta ou a correção.
-
-Pare de aprofundar quando novas buscas não mudam mais a decisão.
-
-## Hierarquia de evidência
-
-Para afirmações técnicas, prefira nesta ordem:
+Prefira:
 
 1. especificação/autor/fabricante oficial;
 2. documentação oficial atual;
-3. repositório oficial e código-fonte quando aplicável;
+3. repositório/código-fonte oficial;
 4. documentação técnica reconhecida;
-5. estudos, testes reproduzíveis e material de engenharia;
-6. comunidade/fóruns somente como pista ou confirmação secundária.
+5. teste reproduzível/material de engenharia;
+6. comunidade/fóruns como pista ou confirmação secundária.
 
-Uma fonte secundária não deve substituir documentação primária quando esta existe.
+Fonte secundária não substitui primária quando a primária responde diretamente à questão.
 
-## Leitura completa
+## 7. Leitura decisiva
 
-Não decida a partir de snippet.
+Não decida por snippet quando contexto importa.
 
-Abra as fontes decisivas e leia o contexto necessário para confirmar:
-
+Para fontes decisivas, confirme:
 - versão;
 - escopo;
 - pré-condições;
 - exceções;
 - efeitos colaterais;
-- procedimento de verificação.
+- procedimento correto;
+- mecanismo de verificação.
 
-## Integração com memória
+## 8. Contradições
 
-Antes da pesquisa:
+Quando duas fontes divergem:
 
-- recupere notas canônicas relacionadas;
-- busque por aliases, entidades, relações e resumos semânticos;
-- identifique tentativas anteriores relevantes.
+1. determine se falam do mesmo escopo/versão;
+2. compare autoridade e data;
+3. procure fonte primária que resolva a divergência;
+4. use evidência real do caso quando disponível;
+5. registre o conflito se continuar sem resolução.
+
+Não force consenso artificial.
+
+## 9. Eficiência
+
+Pergunte após cada ramo:
+
+- descobri algo que muda a estratégia?
+- a próxima busca pode mudar a Collection/Resolution Specification?
+- a documentação já define o comportamento necessário?
+- existe agora uma ação/verificação mais direta que nova pesquisa?
+
+Pare quando novas fontes forem redundantes.
+
+## 10. Integração com memória
 
 Depois da pesquisa:
+- encaminhe novas fontes/descobertas úteis ao `memory-manager`;
+- preserve claim → source/evidence;
+- não copie a mesma informação em múltiplos lugares;
+- atualize relações apenas quando sustentadas;
+- se surgir procedimento geral validado, encaminhe como candidato ao `skill-improver`, nunca edite skill diretamente.
 
-- atualize apenas conhecimento realmente novo;
-- vincule a fonte à afirmação que ela sustenta;
-- não duplique informação já presente;
-- deixe pistas de recuperação para pesquisas futuras.
-
-## Critério de suficiência
-
-A pesquisa está pronta quando consegue produzir um destes artefatos sem lacuna decisória:
+## 11. Critério de suficiência
 
 ### Collection Specification pronta
-Você consegue dizer exatamente o que uma única coleta precisa retornar para escolher a solução.
+Você sabe exatamente o que precisa ser observado para escolher a solução.
 
 ### Resolution Specification pronta
-Você consegue dizer exatamente:
-- qual ação resolve a fase;
-- por que foi escolhida;
-- quais pré-requisitos existem;
-- quais efeitos esperados devem ser observados;
-- como verificar sucesso;
-- como recuperar se a ação falhar.
+Você sabe exatamente:
+- o que fazer;
+- por que essa ação foi escolhida;
+- pré-requisitos;
+- risco/rollback quando necessário;
+- efeito esperado;
+- como provar sucesso.
 
-Se ainda não consegue produzir isso, continue pesquisando **somente a lacuna que impede a decisão**.
+Se nenhuma das duas está pronta, pesquise **somente a lacuna que impede a decisão**.
 
-## Anti-loop
+## 12. Anti-loop
 
-Não faça pesquisa indefinida.
+Se a pesquisa não converge:
 
-Pare quando:
-- novas fontes repetem o mesmo conteúdo;
-- o próximo resultado não mudaria a solução;
-- a documentação primária já define o comportamento;
-- o resultado local já discrimina o caminho.
+- verifique se o problema foi formulado no nível de abstração errado;
+- reavalie a fase com `planner`;
+- não acumule buscas que apenas repetem incerteza.
 
-Se a pesquisa não converge, devolva ao planner a conclusão de que a fase está mal formulada ou em nível de abstração inadequado — não continue acumulando buscas.
+## Verification
+
+Antes de entregar pesquisa como base para ação:
+
+- [ ] contexto anterior relevante foi recuperado;
+- [ ] fontes decisivas foram lidas no contexto necessário;
+- [ ] contradições materiais foram resolvidas ou explicitadas;
+- [ ] pesquisa parou por suficiência, não por cansaço;
+- [ ] Collection/Resolution Specification não contém lacuna decisória escondida;
+- [ ] não inventei capability, comando, API ou comportamento ausente das fontes/evidências.
