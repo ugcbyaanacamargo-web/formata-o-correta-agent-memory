@@ -1,141 +1,153 @@
 ---
 name: phase-executor
-description: Converte uma fase pesquisada em scripts autocontidos de coleta, solução e validação, publica no GitHub, recebe resultados estruturados e respeita o orçamento máximo de 2–3 scripts por fase.
+description: Gera scripts completos e rastreáveis para fases orientadas a resultado.
+version: 1.1.0
+related_skills:
+  - planner
+  - deep-investigator
+  - verifier
+  - knowledge-retrieval
 ---
 
 # Evidence-to-Solution Phase Executor
 
-> Adaptação dos princípios de `superpowers:executing-plans`, `addyosmani:incremental-implementation` e `planning-with-files` para execução humana remota via scripts persistidos no GitHub.
+Converta uma fase suficientemente pesquisada em scripts autocontidos, rastreáveis e focados em resolver. O objetivo é reduzir interações manuais, não multiplicar diagnósticos.
 
 ## Pré-condições
 
 Não gere script até que:
 
 - a fase esteja definida;
-- o objetivo e o critério de sucesso estejam claros;
-- a pesquisa necessária para o próximo script esteja concluída;
-- a skill de investigação tenha produzido uma Collection Specification ou Resolution Specification.
+- objetivo e critério de sucesso estejam claros;
+- `knowledge-retrieval` tenha recuperado contexto anterior relevante, quando houver;
+- a pesquisa necessária esteja concluída;
+- exista Collection Specification ou Resolution Specification suficiente.
 
-## Orçamento da fase
+## Orçamento padrão
 
-Máximo: **3 scripts executados pelo usuário**.
+Use **2–3 scripts como orçamento padrão de eficiência**:
 
-Fluxo preferido:
+1. coleta ampla, se necessária;
+2. solução completa;
+3. verificação/recuperação, quando necessária.
 
-1. coleta;
-2. solução;
-3. validação/recuperação somente se necessário.
+Se coleta não for necessária, comece pela solução.
 
-Se a coleta não for necessária, comece diretamente pela solução.
+Não trate o número 3 como lei universal. Uma execução adicional só pode ocorrer após reavaliação explícita e evidência de que:
+
+- há progresso real;
+- a próxima ação é materialmente diferente;
+- ela é mais curta/segura que replanejar a fase inteira;
+- a justificativa foi registrada.
 
 ## Script de coleta
 
-Um script de coleta deve ser **amplo dentro do escopo da fase**.
+Uma coleta deve ser ampla **dentro do escopo da fase**.
 
-Ele deve:
+Ela deve:
 
-- obter todas as informações decisórias identificadas na pesquisa;
-- evitar múltiplos comandos manuais;
-- normalizar o resultado;
-- incluir contexto suficiente para interpretação posterior;
-- registrar versões/estado relevantes quando isso muda a leitura;
-- não alterar o sistema além do necessário para observar;
-- produzir resultado estruturado e log legível;
-- retornar os artefatos ao repositório quando o transporte estiver disponível.
+- obter todas as evidências decisórias identificadas pela pesquisa;
+- evitar múltiplos comandos manuais fragmentados;
+- normalizar/estruturar resultado;
+- registrar contexto de versão/estado que altera interpretação;
+- evitar mudanças desnecessárias no sistema;
+- produzir log legível + output estruturado;
+- ser idempotente/segura quando possível;
+- persistir resultado no GitHub quando o fluxo realmente dispõe desse transporte.
 
-Não produza “Script 1 só para descobrir uma coisa, Script 2 para descobrir outra” se ambas podem ser coletadas juntas.
+Não faça Script 1 para um dado e Script 2 para outro quando ambos podem ser coletados juntos com segurança.
 
 ## Script de solução
 
-Só gere depois de pesquisar o resultado de coleta.
+Só gere quando a Resolution Specification escolheu uma estratégia.
 
-O script de solução deve:
+O script deve:
 
-- implementar a estratégia escolhida de forma completa;
-- incluir pré-condições;
-- aplicar todas as mudanças necessárias daquela fase em ordem correta;
-- evitar “tente isto e veja”;
+- implementar a solução inteira daquela fase;
+- verificar pré-condições;
+- ordenar mudanças corretamente;
+- registrar estado antes/depois quando isso ajuda a prova;
+- evitar "tente isto e veja";
 - ser idempotente quando possível;
-- registrar antes/depois;
-- fazer verificações locais úteis;
+- criar backup/checkpoint/rollback quando o risco exige;
 - abortar com erro claro em pré-condição não atendida;
-- criar backup/checkpoint/rollback quando a ação for de risco relevante;
-- nunca coletar ou gravar segredos desnecessários.
+- não coletar/gravar segredos desnecessários;
+- incluir verificações locais que não substituem o `verifier` independente.
 
-## Terceiro script
+## Transporte e GitHub
 
-Use apenas para:
+Não assuma ambiente local específico.
 
-- validação independente;
-- rollback;
-- uma correção final claramente sustentada pela falha do script de solução.
+Antes de prometer upload automático:
 
-Não use como nova rodada exploratória.
+1. descubra se existe mecanismo de transporte realmente disponível;
+2. se o usuário já possui clone/Git/GitHub CLI adequado e autorizado, adapte o script;
+3. nunca embuta token/credencial;
+4. se transporte automático não existe, escolha a forma mais simples de devolver o resultado sem fingir automação inexistente.
 
-## Publicação no GitHub
-
-O executor deve persistir:
-
-- script;
-- metadados da execução;
-- resultado estruturado;
-- log;
-- referência ao plano/fase;
-- hash/versão do script executado.
-
-O local exato é decidido pelo contexto do projeto e pela skill de template. Não imponha árvore global.
-
-### Transporte preferido
-
-1. detectar se existe clone autenticado, Git ou GitHub CLI;
-2. usar o transporte já configurado;
-3. criar um comando simples para o usuário executar;
-4. fazer o próprio script gravar o resultado e realizar commit/push quando autorizado e tecnicamente disponível;
-5. nunca embutir token ou credencial no script.
-
-Se o transporte automático não existir, estabeleça-o uma vez em vez de pedir ao usuário para copiar saídas enormes no chat.
+O ChatGPT Web pode ler/escrever o repositório via conector, mas isso não significa que um script executado no computador do usuário consiga fazer push sozinho.
 
 ## Identidade da execução
 
-Cada execução precisa ser rastreável.
+Preserve quando material:
 
-Preserve:
-- ID da fase;
-- ID da execução;
+- phase ID;
+- run ID;
 - versão/hash do script;
 - timestamp;
-- ambiente relevante;
+- ambiente/versão relevante;
 - status;
-- arquivos de saída.
+- arquivos de saída;
+- referência à Collection/Resolution Specification.
 
-O schema exato é escolhido pela skill de template.
+O schema exato é decidido por `template-engineer`.
 
-## Resultado retornado
+## Depois do retorno
 
-Quando o resultado chegar:
+1. confira integridade/identidade do resultado;
+2. leia o output completo necessário;
+3. use `knowledge-retrieval` para conectar o novo resultado ao conhecimento anterior;
+4. entregue ao `deep-investigator` em modo Resolution se ainda falta decidir solução;
+5. atualize memória somente após interpretação;
+6. invoque `verifier` quando a ação de solução foi executada;
+7. gere outra execução somente se existe decisão clara e valor incremental.
 
-1. confira integridade e versão do script;
-2. carregue o resultado inteiro;
-3. entregue ao `deep-investigator` em modo Resolution;
-4. atualize memória canônica apenas após interpretação;
-5. gere o próximo script somente quando a pesquisa produziu decisão.
+## Falhas de transporte
 
-## Falhas
+Erro de transporte/execução que não produz evidência da fase não deve ser confundido com falha lógica da solução.
 
-Se o script falha por erro de transporte/execução:
-- corrija o executor, não consuma o orçamento lógico da fase se nenhuma ação/evidência da fase ocorreu.
+Corrija o mecanismo e preserve o orçamento lógico quando nenhuma ação relevante ocorreu.
 
-Se o script executou e a estratégia falhou:
-- registre como evidência;
-- use o orçamento restante;
-- se o limite for atingido, replaneje.
+## Falha de estratégia
 
-## UX para o usuário
+Se o script executou e a solução falhou:
 
-Durante a execução, apresente preferencialmente:
+- registre a evidência;
+- verifique se houve progresso;
+- use o orçamento restante quando a próxima ação é claramente determinada;
+- se a estratégia começou a repetir-se, replaneje;
+- exceda o orçamento padrão somente com justificativa explícita e verificável.
 
-1. uma frase dizendo o objetivo do script;
+## UX
+
+Por padrão, mostre ao usuário:
+
+1. objetivo do script em uma frase;
 2. **um único comando** para executar;
-3. o que esperar ao terminar.
+3. o que ele deve esperar no final;
+4. depois do retorno, resultado + próxima ação.
 
-Não despeje o raciocínio interno salvo se solicitado.
+Não despeje raciocínio interno se isso não muda a execução.
+
+## Verification
+
+Antes de entregar um script:
+
+- [ ] ele deriva de Collection/Resolution Specification;
+- [ ] coleta tudo que muda a decisão, sem fragmentação desnecessária;
+- [ ] solução é completa para a fase;
+- [ ] pré-condições/erros são tratados;
+- [ ] não pressupõe transporte/credencial inexistente;
+- [ ] resultado é rastreável;
+- [ ] próxima decisão é clara;
+- [ ] orçamento padrão/justificativa de exceção está explícito no estado da fase.
