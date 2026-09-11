@@ -1,38 +1,71 @@
 # Memory Routing Index
 
-Este arquivo é um **cache de roteamento**, não uma taxonomia obrigatória.
+This file is a **routing cache**, not a mandatory taxonomy and not a complete repository map.
 
-## Regra
+## Runtime boundary
 
-A estrutura real do vault pode mudar conforme o agente aprende e conforme os padrões de recuperação evoluem.
+ChatGPT Web is the agent. GitHub stores canonical knowledge, skills, provenance, and execution history.
 
-Antes de usar este índice como verdade:
-1. descubra a estrutura atual do repositório;
-2. valide os caminhos;
-3. use `memory-manager` para localizar notas canônicas;
-4. atualize este arquivo somente se um ponteiro estável realmente reduzir o custo de retrieval.
+Do not route operational work to Hermes/OpenViking/LangGraph/Mem0/LlamaIndex runtimes. References under `upstream/` are mechanism sources only.
 
-## O que deve aparecer aqui
+## Retrieval rule
 
-Somente ponteiros de alto valor, por exemplo:
-- estado ativo atual;
-- plano ativo;
-- notas canônicas muito reutilizadas;
-- índices semânticos/relacionais disponíveis;
-- aliases de áreas reorganizadas.
+Before relying on this index:
 
-Não liste todo arquivo do repositório.
+1. interpret the current goal;
+2. use `skills/knowledge-retrieval/SKILL.md`;
+3. validate pointers with GitHub search/fetch;
+4. load progressively;
+5. repair this index only when a stable pointer will reduce future retrieval cost.
 
-## Política de manutenção
+## Progressive layers
 
-- prefira atualizar ponteiro existente;
-- remova ponteiros obsoletos;
-- preserve aliases após reorganização;
-- não crie seções por domínio só porque um domínio apareceu uma vez;
-- deixe a taxonomia emergir do uso.
+Pointers may expose logical context layers:
 
-## Bootstrap atual
+- **L0** — short abstract/relevance signal;
+- **L1** — planning/navigation overview;
+- **L2** — full canonical detail/evidence.
 
-A estrutura anterior em `memory/`, `research/` e `tasks/` pode conter material útil, mas é **legado**, não contrato permanente.
+These layers do not require separate files. `template-engineer` chooses the representation.
 
-Use as skills adaptativas em `skills/` para decidir como reutilizar, consolidar ou reorganizar esse conteúdo.
+## What belongs here
+
+Only high-value routing pointers, such as:
+
+- current active state when it is reused frequently;
+- active plan entry point;
+- canonical knowledge hubs;
+- frequently reused aliases;
+- stable overview/index documents;
+- important skill entry points;
+- migration redirects after reorganization.
+
+Do **not** enumerate every file.
+
+## Canonical skill entry points
+
+- `skills/adaptive-orchestrator/SKILL.md`
+- `skills/knowledge-retrieval/SKILL.md`
+- `skills/planner/SKILL.md`
+- `skills/deep-investigator/SKILL.md`
+- `skills/phase-executor/SKILL.md`
+- `skills/verifier/SKILL.md`
+- `skills/memory-manager/SKILL.md`
+- `skills/template-engineer/SKILL.md`
+- `skills/knowledge-linker/SKILL.md`
+- `skills/skill-improver/SKILL.md`
+
+## Maintenance policy
+
+- update existing pointer before adding duplicate;
+- remove obsolete pointer after verifying redirects/aliases;
+- preserve aliases after reorganization;
+- do not create domain sections because a topic appeared once;
+- let taxonomy emerge from stable retrieval patterns;
+- keep L0/L1 summaries synchronized with canonical detail when material changes occur.
+
+## Legacy content
+
+Existing `memory/`, `research/`, and `tasks/` directories may contain useful project history/state. They are **legacy content locations, not permanent architecture constraints**.
+
+Use retrieval to discover whether their content remains canonical before creating new structures.
