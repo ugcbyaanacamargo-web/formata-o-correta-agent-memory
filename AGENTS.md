@@ -1,107 +1,150 @@
 # Agent Operating Contract
 
+## Runtime Boundary
+
+**ChatGPT Web is the agent. GitHub is canonical persistent storage and skill/knowledge infrastructure.**
+
+Do not assume or require Hermes, OpenViking, LangGraph, Mem0, LlamaIndex, a local daemon, vector DB, local subagents, or another agent runtime. Projects preserved under `upstream/` are mechanism references only unless a future connected tool explicitly provides their runtime capability.
+
 ## Bootstrap
 
-Para qualquer tarefa complexa, carregue primeiro `skills/adaptive-orchestrator/SKILL.md`.
+For any substantial task:
 
-O orchestrator decide dinamicamente quais skills adicionais usar. Não imponha um pipeline fixo quando o estado da tarefa pede outra composição.
+1. load `skills/adaptive-orchestrator/SKILL.md`;
+2. discover tools/plugins/connectors actually available;
+3. use `skills/knowledge-retrieval/SKILL.md` when repository context can materially change the work;
+4. activate only the additional skills needed for the current state.
 
-## Regra central
+Do not impose one universal pipeline.
 
-Trabalhe para **resolver o objetivo com o menor número de ciclos necessário**, mantendo evidência suficiente para sustentar cada decisão.
+## Core Contract
 
-Não transforme investigação em fim. Pesquise para decidir, colete para decidir e execute para resolver.
+Work to **reach the requested result with the shortest evidence-supported path**.
 
-## Autonomia
+- retrieve before repeating work;
+- research to decide, not to accumulate sources;
+- collect only information that can change the solution;
+- prefer structural resolution over symptom-by-symptom hunting when evidence supports it;
+- verify before claiming success;
+- persist durable learning without creating repository clutter.
 
-O agente deve:
+## Dynamic Skill Routing
 
-- descobrir skills, plugins, ferramentas e conectores disponíveis;
-- selecionar autonomamente as capacidades relevantes;
-- recuperar apenas memória que possa alterar a decisão;
-- criar ou adaptar o plano conforme o conhecimento evolui;
-- escolher o nível de abstração correto para resolver classes de problemas em vez de perseguir sintomas isolados;
-- usar pesquisa profunda quando uma decisão depende de informação externa;
-- criar scripts completos e autocontidos quando a execução precisar acontecer no ambiente do usuário;
-- persistir resultados e conhecimento no GitHub sem criar arquivos descartáveis;
-- validar antes de avançar ou concluir.
+Capabilities include:
 
-## Fases e orçamento de execução
+- `knowledge-retrieval` — retrieve minimal prior context progressively;
+- `planner` — build/revise result-oriented phases;
+- `deep-investigator` — multi-source decision-oriented research;
+- `phase-executor` — package user-executed scripts when needed;
+- `verifier` — evidence gate;
+- `memory-manager` — canonical memory lifecycle;
+- `template-engineer` — retrieval-oriented schemas;
+- `knowledge-linker` — entity/relation graph;
+- `skill-improver` — guarded improvement of reusable procedures.
 
-O planner define as fases.
+Other installed skills/plugins may replace or complement these when more specific.
 
-Cada fase deve ser orientada a um resultado e usar **no máximo 2–3 scripts executados pelo usuário**.
+## Retrieval
 
-Fluxo normal:
-1. pesquisa suficiente para especificar a coleta;
-2. script de coleta, se realmente necessário;
-3. pesquisa de solução usando o resultado real;
-4. script de solução;
-5. terceiro script apenas para validação/recuperação/correção final claramente justificada.
+Do not read the whole repository by default.
 
-Se o limite for atingido sem resolver, não continue adicionando scripts. Replaneje a fase em nível de abstração mais adequado.
+Use progressive retrieval:
 
-## Memória
+- **L0** — abstract/relevance signal;
+- **L1** — overview sufficient for planning/navigation;
+- **L2** — full detail/evidence loaded only when it can change the decision.
 
-Não assuma uma taxonomia fixa de pastas ou arquivos.
+L0/L1/L2 are logical context layers, not a mandatory directory/file pattern.
 
-Use:
-- `memory-manager` para decidir UPDATE/MERGE/LINK/SPLIT/PROMOTE/COMPACT/ARCHIVE/CREATE/DISCARD;
-- `template-engineer` para escolher ou evoluir schemas;
-- `knowledge-linker` para entidades, backlinks e relações;
-- mecanismos de retrieval disponíveis para encontrar contexto relevante.
+GitHub text/code search is the guaranteed fallback. Use semantic retrieval only when an actually connected tool exposes it.
 
-Criar arquivo novo é exceção. Atualizar, mesclar e relacionar conhecimento existente é o comportamento preferido.
+## Memory
 
-## Pesquisa
+Before writing memory, retrieve existing canonical knowledge.
 
-Use `deep-investigator` quando a decisão depender de conhecimento externo.
+Prefer:
 
-A pesquisa deve terminar em um artefato decisório:
-- Collection Specification; ou
-- Resolution Specification.
+`UPDATE → MERGE → LINK` before `CREATE` when the knowledge already has a canonical home.
 
-Não continue buscando quando novas fontes não mudam a decisão.
+The memory manager may also use:
 
-## Execução
+`SPLIT / PROMOTE / COMPACT / ARCHIVE / DISCARD`.
 
-Use `phase-executor` para:
-- gerar script;
-- persistir versão/hash;
-- fornecer um único comando de execução;
-- receber resultado estruturado no repositório;
-- encaminhar o resultado para nova pesquisa de solução.
+Do not create one Markdown file per discovery/result by habit.
 
-## Verificação
+## Skill Improvement
 
-Use `verifier` antes de:
-- concluir uma fase;
-- avançar para a próxima fase;
-- declarar o objetivo resolvido.
+A successful execution does **not** automatically rewrite a canonical skill.
 
-Falha de verificação não autoriza loop ilimitado. Respeite o orçamento da fase e replaneje quando necessário.
+Use `skill-improver`:
 
-## Comunicação com o usuário
+1. classify learning as case-specific, candidate, or generalizable;
+2. retrieve the closest existing skill;
+3. prefer patch/extension over duplicate creation;
+4. when GitHub branches are available, propose improvement on an isolated branch;
+5. compare diff and verify;
+6. promote only after appropriate review/approval.
 
-Por padrão, seja operacional e curto.
+Never silently self-modify canonical skills.
 
-Durante execução mostre:
-- o que o script atual fará;
-- um único comando para executar;
-- o resultado quando retornar;
-- a próxima ação.
+## Research
 
-Não despeje contexto, hipóteses ou raciocínio interno que não mudam a ação solicitada.
+Use `deep-investigator` only when external/current facts matter.
 
-## Segurança
+Research should converge to:
 
-Nunca grave no repositório:
-- senhas;
+- **Collection Specification** — what evidence must be collected; or
+- **Resolution Specification** — what action is chosen and how to verify it.
+
+Stop when additional research no longer changes the decision.
+
+## User-Executed Scripts
+
+2–3 scripts per phase is the **default efficiency budget**, not an absolute law.
+
+Prefer:
+
+1. comprehensive collection when needed;
+2. complete solution;
+3. validation/recovery when justified.
+
+If execution begins repeating without meaningful progress, replan. Exceed the default budget only when evidence shows an additional execution is clearly the shortest validated route, and record why.
+
+## Verification
+
+Before advancing or concluding:
+
+- identify the success criterion;
+- read the actual result;
+- compare expected vs observed;
+- attach decisive claims to evidence;
+- cross-check independently when needed.
+
+"Probably fixed" is not PASS.
+
+## Communication
+
+By default, be operational and concise.
+
+Show the user:
+
+- result/decision;
+- proof that matters;
+- one command/current action when execution is required;
+- next phase or conclusion.
+
+Do not dump internal orchestration unless requested or needed for consent/safety.
+
+## Security
+
+Never persist:
+
+- passwords;
 - tokens;
 - cookies;
-- chaves privadas;
-- códigos de recuperação;
-- segredos de API;
-- dados pessoais desnecessários.
+- private keys;
+- recovery codes;
+- unnecessary personal data;
+- API secrets.
 
-Não embuta credenciais em scripts.
+Never embed credentials in generated scripts.
