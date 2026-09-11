@@ -1,159 +1,257 @@
 ---
 name: template-engineer
-description: Projeta e evolui schemas/templates Markdown orientados a retrieval para plano, memória, resultados, fontes e conhecimento, escolhendo quando reutilizar, editar, mesclar ou criar estruturas sem impor uma taxonomia fixa.
+description: Projeta schemas Markdown orientados a retrieval e auditoria.
+version: 1.1.0
+related_skills:
+  - knowledge-retrieval
+  - memory-manager
+  - knowledge-linker
 ---
 
 # Adaptive Template Engineer
 
-> Inspirado nos templates e lifecycle contracts do `planning-with-files`, na estrutura de memória do `awesome-copilot`, em context engineering e nos princípios de retrieval/graph memory de Mem0/LlamaIndex.
+Projete a representação que torna um artefato **fácil de encontrar, entender, atualizar e auditar**. Não existe template universal. O schema nasce do uso de retrieval, decisão e manutenção.
 
-## Missão
+## Regra central
 
-Não fornecer “um template universal”.
+**Inspect before invent. Retrieval before decoration.**
 
-Fornecer a capacidade de **escolher ou construir o template certo para o tipo de informação e para a forma como ela precisará ser recuperada depois**.
+Antes de criar ou alterar um template:
 
-## Regra 1 — Inspect Before Invent
+1. descubra schemas/templates existentes;
+2. leia exemplos do mesmo tipo de artefato;
+3. veja como `knowledge-retrieval` realmente localiza esse conteúdo;
+4. identifique quais campos têm consumidor real;
+5. reutilize o schema atual se ele já atende;
+6. adapte minimamente quando uma lacuna é recorrente;
+7. crie novo template apenas para um tipo de artefato realmente distinto.
 
-Antes de criar um schema:
+## 1. Perguntas de design
 
-1. descubra templates existentes;
-2. leia arquivos do mesmo tipo;
-3. identifique quais campos realmente são usados por retrieval, execução ou validação;
-4. reutilize o schema existente se ele já serve;
-5. adapte o schema existente se falta um requisito recorrente;
-6. crie template novo somente quando o tipo de artefato é semanticamente diferente.
+Antes de definir campos, responda:
 
-## Regra 2 — Retrieval First
+- Como esse artefato será localizado daqui a semanas/meses?
+- Qual frase curta permite decidir se vale abrir o conteúdo?
+- Qual overview permite planejar sem ler o detalhe inteiro?
+- Quais aliases/IDs evitam falha de busca?
+- Quais relações precisam ser navegáveis?
+- Qual provenance precisa sobreviver?
+- O que pode envelhecer?
+- Qual parte precisa ser legível por máquina?
+- O conteúdo bruto precisa ficar separado do consolidado?
 
-O template deve ser desenhado a partir das perguntas futuras.
+Se um campo não melhora retrieval, execução, atualização ou auditoria, provavelmente ele não pertence ao schema.
 
-Pergunte:
+## 2. Camadas L0 / L1 / L2
 
-- Como o agente vai localizar isto?
-- Por quais nomes/aliases?
-- Que relação precisa levá-lo até esta nota?
-- Que resumo deve ser indexado?
-- Que campo será usado para filtrar?
-- Que evidência precisa ser rastreada?
-- O que envelhece e precisa de data/versão?
-- O que deve ser legível por máquina?
+Adapte o conceito de OpenViking sem obrigar uma estrutura de arquivos específica.
 
-Se um campo não melhora recuperação, execução ou auditoria, provavelmente não precisa existir.
+### L0 — Abstract
 
-## Primitivas de schema
+Sinal de relevância curto.
 
-Não imponha os mesmos nomes de campos, mas garanta equivalentes para o que o artefato exige.
+Pode ser:
+- `abstract` no frontmatter;
+- uma linha de resumo;
+- descrição no índice;
+- heading + primeira frase.
+
+Objetivo: decidir rapidamente se o artefato merece aprofundamento.
+
+### L1 — Overview
+
+Contexto suficiente para navegação/planejamento:
+
+- escopo;
+- estado atual;
+- pontos decisivos;
+- links para detalhe;
+- relações principais;
+- provenance resumida;
+- freshness quando relevante.
+
+Pode ser seção no próprio arquivo ou overview de um conjunto.
+
+### L2 — Detail
+
+Detalhe integral necessário para execução/prova:
+
+- evidência;
+- logs/resultados;
+- procedimento completo;
+- histórico;
+- fonte técnica extensa.
+
+Não duplique L2 dentro de L1.
+
+## 3. Anti-fragmentação
+
+Não crie automaticamente:
+
+- um `.abstract.md` por arquivo;
+- um `.overview.md` por arquivo;
+- um Markdown novo por resultado;
+- um arquivo novo para cada entidade citada.
+
+Crie uma unidade separada somente quando ela possui valor de retrieval próprio ou ciclo de vida independente.
+
+Se resumo e detalhe cabem bem na mesma nota canônica, mantenha-os juntos.
+
+## 4. Primitivas de schema
+
+Use somente quando aplicáveis.
 
 ### Identidade
 - ID estável;
 - tipo;
 - aliases;
-- versão/schema quando relevante.
+- canonical/alias status.
 
 ### Retrieval
-- resumo semântico curto;
-- termos-chave;
+- abstract L0;
+- overview L1;
+- termos-chave somente quando melhoram busca;
 - entidades;
-- links/backlinks;
-- relações tipadas.
+- relações/backlinks;
+- hints de quando carregar L2.
 
 ### Proveniência
 - fontes;
 - execução que originou o dado;
-- hash/versão do artefato;
-- data/escopo quando relevante.
+- commit/hash quando material;
+- escopo/versão/data.
+
+### Freshness
+- `last_verified` quando validade temporal importa;
+- indicação de resumo possivelmente defasado;
+- versão/scope atual.
 
 ### Estado
 - status;
 - fase;
 - dependências;
+- decisão atual;
 - próximo ponto de decisão.
 
 ### Conteúdo
 - conhecimento consolidado;
 - evidência;
-- decisão;
-- saída estruturada.
+- ação/procedimento;
+- output estruturado.
 
-Use apenas as primitivas necessárias ao tipo de artefato.
+## 5. Frontmatter
 
-## Escolha de granularidade
+Use YAML frontmatter quando ele melhora:
 
-Crie uma nota separada quando:
+- busca;
+- identificação;
+- routing;
+- deduplicação;
+- relações;
+- freshness;
+- automação futura.
 
-- representa conceito estável e reutilizável;
-- possui ciclo de vida próprio;
-- é referenciada por vários contextos;
-- separar melhora retrieval.
+Não use frontmatter como depósito de campos vazios.
 
-Mantenha dentro de nota existente quando:
+Exemplo lógico mínimo quando útil:
 
-- é apenas detalhe de um conceito;
-- não será recuperada isoladamente;
-- criaria fragmentação;
-- repete estrutura já canônica.
+```yaml
+---
+id: stable-id
+abstract: "Resumo curto para relevância."
+aliases: ["alias-a", "alias-b"]
+canonical: true
+last_verified: 2026-09-11
+related:
+  - target: another-id
+    relation: depends-on
+sources:
+  - ref: SRC-001
+---
+```
 
-## Markdown profissional
+O exemplo é uma opção, não um template obrigatório.
 
-Quando adequado:
+## 6. Resultados de execução
 
-- frontmatter YAML para metadados;
-- headings previsíveis;
-- tabelas apenas para dados tabulares;
-- blocos JSON/YAML para resultados que precisam ser parseados;
-- links relativos ou wikilinks quando o vault os suporta;
-- IDs estáveis em vez de nomes frágeis;
-- seções pequenas e escaneáveis;
-- conteúdo bruto separado de resumo/decisão.
+Quando um resultado precisa ser parseado pelo agente, prefira:
 
-## Templates adaptativos por artefato
+- JSON/YAML estruturado para dados;
+- Markdown curto para explicação humana;
+- artefato bruto separado quando muito grande.
 
-O sistema pode precisar de templates diferentes para:
+Preserve:
+- ID da execução;
+- versão/hash do script quando material;
+- timestamp;
+- status;
+- ambiente relevante;
+- arquivos/evidências produzidos.
+
+Não faça o usuário copiar blocos gigantes se o fluxo GitHub puder persistir o resultado.
+
+## 7. Templates por função
+
+Podem surgir schemas distintos para:
 
 - plano;
 - fase;
 - execução;
 - resultado;
 - fonte;
-- nota de conhecimento;
+- nota canônica;
 - decisão;
 - lição;
 - índice;
-- skill.
+- skill;
+- proposta de melhoria.
 
-Não pré-crie todos. Crie quando a demanda surgir e houver padrão suficiente.
+Não pré-crie todos. Um template nasce quando existe uso real recorrente.
 
-## Evolução de schema
+## 8. Evolução de schema
 
-Quando um template deixa de servir:
+Altere um schema quando houver problema observável:
 
-1. prove o problema de retrieval/execução;
-2. desenhe a mudança mínima;
-3. versione o schema se necessário;
-4. migre notas afetadas de forma controlada;
-5. mantenha aliases/backlinks;
-6. valide que o novo formato melhora busca;
-7. evite coexistência indefinida de variantes equivalentes.
+- busca perde resultados relevantes;
+- duplicação cresce;
+- relações não podem ser reconstruídas;
+- provenance se perde;
+- o agente precisa abrir detalhe demais para decidir relevância;
+- múltiplas variantes do mesmo tipo criam ambiguidade.
 
-## Compactação
+Procedimento:
 
-Templates devem facilitar compactação:
+1. prove o problema;
+2. proponha mudança mínima;
+3. versione somente se migração for necessária;
+4. migre artefatos afetados de forma controlada;
+5. preserve aliases/backlinks;
+6. verifique retrieval depois da migração;
+7. elimine coexistência indefinida de variantes equivalentes.
 
-- resumo separado de evidência bruta;
-- referências para detalhes;
-- campos consistentes para deduplicação;
-- relações explícitas;
-- histórico separável do estado atual.
+## 9. Compactação
 
-## Gate
+O schema deve permitir separar:
 
-Um template só é bom se:
+- resumo de relevância;
+- overview de decisão;
+- detalhe/evidência;
+- histórico;
+- provenance.
 
-- reduz tempo de recuperação;
-- evita duplicidade;
-- mantém proveniência;
-- preserva relações;
-- pode ser atualizado sem criar arquivos descartáveis;
-- é compreensível pelo agente e por ferramentas;
-- não obriga informação a caber em categorias artificiais.
+Isso permite compactar sem apagar informação importante.
+
+## 10. Gate de qualidade
+
+Um template só é aprovado quando:
+
+- [ ] reduz custo de retrieval;
+- [ ] não cria arquivos desnecessários;
+- [ ] diferencia resumo de detalhe;
+- [ ] preserva provenance;
+- [ ] mantém relações úteis;
+- [ ] freshness é representável quando necessária;
+- [ ] campos possuem consumidor real;
+- [ ] pode evoluir sem quebrar identidade/backlinks;
+- [ ] não assume runtime externo inexistente;
+- [ ] o agente e uma pessoa conseguem entender o artefato sem conhecer sua implementação interna.
