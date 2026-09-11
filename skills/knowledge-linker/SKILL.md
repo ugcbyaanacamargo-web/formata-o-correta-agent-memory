@@ -1,111 +1,153 @@
 ---
 name: knowledge-linker
-description: Resolve entidades, cria relações tipadas e usa o grafo de conhecimento para retrieval e planejamento, evitando links redundantes e ontologias rígidas. Use quando novas evidências alterarem relações entre conceitos.
+description: Resolve entidades e relações úteis para retrieval e decisão.
+version: 1.1.0
+related_skills:
+  - knowledge-retrieval
+  - memory-manager
+  - template-engineer
 ---
 
 # Adaptive Knowledge Linker
 
-## Objetivo
+Transforme informação isolada em **conhecimento navegável** sem criar um grafo ornamental ou uma ontologia rígida. Relações existem para melhorar retrieval, planejamento, explicação causal e validação.
 
-Transformar informação isolada em **conhecimento navegável**.
+## 1. Resolver identidade antes de criar nós
 
-O grafo não é um diagrama decorativo. Ele deve permitir que uma investigação encontre rapidamente:
-
-- o que depende de quê;
-- o que foi observado junto;
-- qual evidência sustenta uma relação;
-- que nota é canônica;
-- que caminho conecta o problema atual ao conhecimento já acumulado.
-
-## 1. Resolver entidades antes de criar
-
-Para cada entidade nova:
+Para cada entidade:
 
 1. normalize o nome;
-2. pesquise aliases e nomes anteriores;
+2. busque aliases, nomes antigos, IDs e variantes;
 3. procure nota canônica existente;
-4. reutilize o identificador existente quando for a mesma entidade;
-5. crie entidade nova apenas quando semanticamente distinta.
+4. compare escopo/versão;
+5. reutilize identidade existente quando for a mesma entidade;
+6. crie nova entidade apenas quando semanticamente distinta.
 
-Evite nós duplicados por variação de nome.
+Evite nós duplicados por diferença de grafia.
 
-## 2. Relações tipadas e úteis
+## 2. Relações tipadas
 
-Crie uma relação somente quando ela melhora navegação ou decisão.
+O tipo nasce do domínio e da evidência. Exemplos abstratos:
 
-O tipo da relação deve nascer do domínio e do conhecimento, não de uma lista fixa. Exemplos abstratos de intenção:
+- depende-de;
+- controla;
+- configura;
+- implementa;
+- causa/pode-causar;
+- evidencia;
+- valida;
+- contradiz;
+- substitui;
+- equivalente-a;
+- derivado-de;
+- relacionado-a.
 
-- dependência;
-- controle;
-- origem;
-- consequência;
-- evidência;
-- implementação;
-- equivalência;
-- substituição;
-- conflito;
-- validação.
+Não limite o sistema a essa lista.
 
-Não crie link apenas porque duas palavras apareceram no mesmo resultado.
+## 3. Força da relação
 
-## 3. Proveniência da relação
+Toda relação usada para retrieval deve ter força/qualidade implícita ou explícita.
 
-Toda relação importante deve poder responder:
+### Strong
+Use quando a relação é sustentada por:
+- documentação/fonte direta;
+- resultado verificável;
+- dependência estrutural clara;
+- decisão canônica;
+- vínculo explícito entre artefatos.
 
-- de onde veio;
-- em qual execução/fonte foi observada;
-- se é regra geral ou dependente de versão/estado;
+Pode expandir contexto automaticamente quando muda a decisão.
+
+### Medium
+Use quando a relação é útil, mas depende de contexto/versão ou possui evidência indireta.
+
+Pode ser expandida quando existe lacuna específica.
+
+### Weak
+Coocorrência, similaridade vaga ou associação ainda não comprovada.
+
+Não carregue automaticamente contexto por essa relação. Use-a como pista de pesquisa, se necessário.
+
+Não transforme a escala em burocracia: o importante é impedir que qualquer backlink tenha o mesmo peso.
+
+## 4. Retrieval value
+
+Antes de criar uma relação, pergunte:
+
+- isso ajuda a encontrar conhecimento depois?
+- isso explica dependência/causa/validação?
+- isso reduz ambiguidade de identidade?
+- isso muda qual contexto deve ser carregado?
+
+Se não, não crie o link.
+
+## 5. Proveniência
+
+Toda relação decisiva deve poder responder:
+
+- qual fonte/execução/decisão a sustenta;
+- escopo/versão;
+- quando foi verificada, se temporalmente relevante;
 - qual nota contém a explicação completa.
 
-O grafo aponta para conhecimento; não substitui a explicação.
+O link não substitui a evidência.
 
-## 4. Backlinks
+## 6. Backlinks e aliases
 
-Quando o formato usado suportar links bidirecionais ou backlinks:
+Quando o formato suporta backlinks:
 
-- mantenha os dois lados coerentes;
-- preserve aliases após renomeações;
-- não quebre links ao consolidar notas;
-- atualize referências durante MERGE/SPLIT.
+- mantenha coerência após renomear/mesclar;
+- preserve aliases;
+- redirecione links para a unidade canônica;
+- não mantenha duplicatas só para evitar corrigir backlinks.
 
-## 5. Retrieval orientado por grafo
+## 7. Integração com `knowledge-retrieval`
 
-Ao recuperar memória para uma tarefa:
+O linker não deve carregar o grafo inteiro.
 
-1. localize as entidades diretamente mencionadas ou semanticamente relacionadas;
-2. carregue suas notas canônicas;
-3. expanda relações fortes que possam mudar a decisão;
-4. pare antes de trazer vizinhança irrelevante.
+Ao servir retrieval:
 
-Use o grafo como **expansor de contexto**, não como motivo para carregar todo o vault.
+1. entregue relações fortes primeiro;
+2. relações médias somente quando fecham uma lacuna;
+3. relações fracas como pistas, não contexto automático;
+4. expanda um salto por padrão;
+5. segundo salto apenas quando justificado pelo problema.
 
-## 6. Grafo como gerador de pesquisa
+## 8. Grafo como detector de lacunas
 
-Quando uma relação essencial está ausente:
+Quando uma decisão depende de uma relação ausente/incerta:
 
-- transforme a lacuna em pergunta de pesquisa;
-- use a skill de investigação profunda;
-- registre o resultado e feche a relação se a evidência sustentar.
+1. registre a lacuna;
+2. formule pergunta de pesquisa/teste;
+3. use `deep-investigator` ou execução apropriada;
+4. só promova a relação quando houver evidência.
 
-Assim o grafo ajuda o agente a saber **o que ainda precisa aprender**.
+O grafo deve mostrar também o que **ainda não sabemos**, sem preencher lacunas por inferência silenciosa.
 
-## 7. Consolidação
+## 9. Consolidação
 
-Se múltiplas relações ou nós passam a dizer a mesma coisa:
+Se nós/relações duplicam conhecimento:
 
 - canonize;
 - mescle;
-- preserve proveniência;
-- redirecione backlinks;
-- remova redundância.
+- preserve provenance;
+- atualize aliases/backlinks;
+- archive redundância após verificação.
 
-## 8. Compatibilidade com Markdown/Obsidian
+## 10. Markdown / Obsidian-style links
 
-Quando o vault usar Markdown compatível com Obsidian:
+Quando útil, use `[[nota-canônica]]`, links relativos ou metadata estruturada para navegação. A sintaxe escolhida deve ser compreendida pelas ferramentas atuais ou continuar legível por busca textual.
 
-- use links estáveis como `[[nota-canônica]]` quando isso melhorar navegação;
-- use aliases para manter referências antigas;
-- use frontmatter apenas para metadata que será realmente consultada;
-- mantenha um resumo semântico curto para futura indexação vetorial.
+Não declare que backlinks criam busca semântica real.
 
-Não dependa de sintaxe Obsidian se o runtime atual não a entende; preserve o conceito de ligação usando o mecanismo disponível.
+## Verification
+
+Antes de salvar relação importante:
+
+- [ ] entidade foi resolvida/canonizada;
+- [ ] relação tem significado operacional;
+- [ ] strength/retrieval value está claro;
+- [ ] provenance existe quando a relação é decisiva;
+- [ ] não é apenas coocorrência;
+- [ ] aliases/backlinks continuam válidos;
+- [ ] retrieval não passará a carregar contexto irrelevante por causa deste link.
