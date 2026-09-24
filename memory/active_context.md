@@ -14,3 +14,7 @@ Objetivo: reconstrução limpa **sem repetir erro de agosto** e resolução dos 
 
 ## Próximo passo
 Após fim do ScanHealth, executar rollback de RST SOMENTE com mecanismo de recuperação/backup validado e plano pós-boot. Preparar Windows/drivers offline, manter Secure Boot 2023. Provas e fontes: `research/findings.md`, `research/source_ledger.md`, `tasks/progress.md`; plano em `tasks/plan.md`. 
+
+## Execução real adicional (23/09 ~22:30 -03)
+- DISM ScanHealth da sessão pré-existente finalizou 22:28:05, sem pedido de reboot; CheckHealth independente retorna sem corrupção, exit 0.
+- PnPUtil exportou com sucesso os 3 drivers do controlador para `Desktop/KIT_STORAGE_RST_20260923` e gerou hashes SHA256 (16 arquivos). **Localização no mesmo SSD: preservar externamente antes de apagá-lo.** Driver iaStorAC 17.8 continuou Boot/Running; não ocorreu rollback/reboot.
