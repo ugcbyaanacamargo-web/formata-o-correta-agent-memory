@@ -13,13 +13,16 @@ Restaurar a confiabilidade e integridade do Lenovo 320-15IKB Type 80YH sem apena
 - [ ] Corrigir atualização do Desktop Commander quando upstream publicar versão compatível. Qualquer build com overrides precisa de teste em instalação isolada antes de trocar o processo remoto ativo.
 
 ## Fase 2 — Estabilidade da plataforma
-- [x] Identificar WHEA armazenamento histórico com CPER; sem recorrência após RST nos períodos consultados, não reverter SATA por hipótese.
+- [x] Identificar WHEA histórico com CPER e NOVO iaStorAC ID129 em 23/09 21:46:19 (RecordId 11276); falha armazenamento REABERTA após a mudança para RST 17.8.1.1066. Não reverter SATA por hipótese.
 - [ ] Corrompimento de memória 0x1A/0x41792 em 05/09 e 23/09: isolamento seguro de driver vs memória intermitente, com usuário e recuperação física disponíveis; backup de dados primeiro, não ativar Driver Verifier remotamente sem recovery.
 - [ ] Confirmar firmware/Intel ME/ACPI/EC com relatório atual próprio; não usar apenas relatos antigos Ubuntu como prova de estado atual.
-- [ ] Auditar ACL da raiz do volume C: (Authenticated Users FullControl herda) com referência correta e escopo, não redefinir recursivamente no escuro.
+- [x] Auditar ACL da raiz C:\\: Authenticated Users FullControl (OI)(CI), inclusive herança em diretórios sem ACL protegida. Efeito sobre risco de serviço sem aspas demonstrado; sem indício de exploração C:\\Program.exe.
+- [x] Corrigir 4 ImagePath de serviços SYSTEM não delimitados por aspas (Odoo, Codex, PC Manager, WslInstaller), com backup local, validação de caminhos e estados.
+- [ ] Remediar ACL da raiz C:\\ (e revalidar heranças em ferramentas de firmware) somente após backup externo recuperável/rollback e decisão de alcance; não usar icacls /reset /T.
+- [ ] Investigar Event129/latência de armazenamento e proximidade do AppXSvc 7000/7009, inclusive recorrência sob uso.
 
 ## Fase 3 — Reinstalação final (somente se justificada)
-- [ ] Confirmar backup testado, mídia oficial íntegra, firmware/SSD validado, caminho de drivers e recuperação.
+- [ ] Confirmar backup EXTERNO testado (nenhuma unidade externa encontrada em 24/09), mídia oficial íntegra, firmware/SSD validado, caminho de drivers e recuperação.
 - [ ] Instalação limpa controlada, sem misturar atualizadores de driver.
 - [ ] Validar primeiro boot, aplicativos, WU/Store, drivers, BSOD/WHEA após uso real.
 
