@@ -36,3 +36,9 @@ Não liste todo arquivo do repositório.
 A estrutura anterior em `memory/`, `research/` e `tasks/` pode conter material útil, mas é **legado**, não contrato permanente.
 
 Use as skills adaptativas em `skills/` para decidir como reutilizar, consolidar ou reorganizar esse conteúdo.
+
+## Estado ativo FORMATAÇÃO CORRETA (23/09/2026)
+
+- [Contexto do Lenovo e hipóteses verificadas](memory/active_context.md) — consulta prioritária para próximos reparos.
+- [Plano de estabilização, testes e reinstalação](tasks/plan.md).
+- [Execuções, resultados negativos e rollback](tasks/progress.md).
