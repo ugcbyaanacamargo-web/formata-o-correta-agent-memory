@@ -22,3 +22,8 @@
 2. Preparar recuperação e rollback seguro do SATA atual para baseline 15.9 com hardware/INF/teste já validados; nenhum reboot/forçar driver durante servicing.
 3. Somente depois do armazenamento estável, tratar Shell/AppX pela camada adequada e confirmar por teste de uso; não mais tentar Client.CBS ativo à força.
 4. Montar e validar Windows+driver kit offline/backup; nenhum Sanitize antes dos gates.
+
+## 2026-09-23 22:30 — Resultado adicional executado
+- ScanHealth anterior terminou às 22:28:05; Checagem independente `DISM /Online /Cleanup-Image /CheckHealth /NoRestart`: **nenhuma corrupção do repositório de componentes**, exit 0, imagem 19045.7725.
+- Backup **não destrutivo** dos três pacotes SATA do Driver Store exportado com PnPUtil (retorno de sucesso em cada): `oem51.inf` RST 15.9 AHCI, `oem53.inf` RST 15.9 Storage, `oem54.inf` RST 17.8 atual. Pasta local `Área de Trabalho/KIT_STORAGE_RST_20260923`, 16 arquivos, manifesto `SHA256.csv` gerado.
+- **Esta cópia está no próprio WD Green que será apagado** e NÃO serve como backup externo; transferir ao pendrive externo antes de qualquer Sanitize. Driver de boot NÃO foi alterado.
