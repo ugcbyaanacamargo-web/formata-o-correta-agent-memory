@@ -35,3 +35,7 @@
 3. Conferir Backup de dados fora do SSD e kit Windows/drivers offline + checksums + boot USB realmente testado.
 4. Preservar Secure Boot CA 2023, evitar restauração factory keys mais antigas.
 5. T0 offline antes drivers extras; T1 após drivers; T2 após internet/ESU/Store. Guardar relatórios antes/depois e interromper se gate falhar.
+
+## FND-20260923-05 — Preparação material efetuada
+- `DISM /Online /Cleanup-Image /CheckHealth` após ScanHealth: sem corrupção, exit code 0, build da imagem 19045.7725. Isto não prova saúde de AppX nem de disco.
+- `pnputil /export-driver oem51.inf`, `oem53.inf`, `oem54.inf`: três operações reportaram sucesso, 16 arquivos exportados, manifesto SHA256 salvo na Área de Trabalho. Nenhuma alteração nos dispositivos/drivers em uso. Pasta reside no WD Green, logo deve ser copiada para meio externo previamente ao Sanitize.
