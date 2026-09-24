@@ -1,12 +1,12 @@
 # Active Context — FORMATAÇÃO CORRETA
 
-## Objetivo operacional atual (23/09/2026)
+## Objetivo operacional atual (24/09/2026)
 Estabilizar o Lenovo IdeaPad 320-15IKB Type 80YH como conjunto (Windows, AppX, drivers, memória, firmware, armazenamento), com correções verificadas; não considerar um aviso isolado como prova de causa sistêmica. Reinstalação limpa somente com pré-condições e validação pós-boot. O usuário prefere operação remota e explicações breves.
 
 ## Estado auditado
 - Windows 10 Home Single Language 22H2 build 19045.7725; Windows RE habilitado, BitLocker C: desligado, conta remota elevada. Não foi confirmado backup integral de dados.
 - Duas telas azuis 05/09 e 23/09: 0x1A/0x41792 MEMORY_CORRUPTION_ONE_BIT; WinDbg analisou minidumps e dump completo sem apontar autor da corrupção. MemTest86 passou, o que não exclui defeito intermitente. Não ativar Driver Verifier remotamente sem caminho de recuperação/autorização pós-boot.
-- Três eventos WHEA de storage em agosto registraram STORPORT/storahci/WD Green. No checkpoint de 04/09 não houve recorrência após troca para Intel RST; em 23/09 controlador SATA estava no Intel iaStorAC 17.8.1.1066, sem novos WHEA identificados. Não trocar driver SATA por tentativa.
+- Três eventos WHEA de storage em agosto registraram STORPORT/storahci/WD Green. No checkpoint de 04/09 não houve recorrência após troca para Intel RST, MAS o caso REABRIU: evento iaStorAC ID 129 RecordId 11276 em 23/09 21:46:19, reset de \\Device\\RaidPort0 com iaStorAC 17.8.1.1066. AppXSvc apresentou 7009/7000 um segundo depois; coincidência temporal, causalidade não comprovada. ReadLatencyMax 64138 ms, WriteLatencyMax 64059 ms (máximos sem horário individual). Sem eventos 129 adicionais na coleta de 24/09 00:45. Não trocar driver SATA por tentativa; backup externo inexistente na enumeração.
 - SearchApp falhava desde 22/08, ScreenClippingHost desde 16/09; ambos com 0xc000027b recente. Registro isolado do pacote Microsoft.Windows.Search foi concluído com sucesso em 23/09; ativação `search-ms:` não produziu crash imediato (não prova estabilidade sustentada).
 - Registro do pacote MicrosoftWindows.Client.CBS concluiu, mas houve também evento AppX 404 0x8007042B. Ativação `ms-screenclip:` voltou a causar ScreenClippingHost 0xc000027b após o registro.
 - Procmon capturou a falha ScreenClipping: 6 recusas de leitura de atributos em C:\Users; outras recusas em MuiCache e User Shell Folders com pedidos Read/Write ou All Access. ALL APPLICATION PACKAGES tem leitura nas principais raízes C:\Windows/C:\Program Files/Registro e User Shell Folders. C:\Users não tem ACE desse grupo. Teste reversível concedendo SOMENTE ReadAttributes nesse diretório, sem herança, NÃO resolveu: crash reproduzido às 22:35:33. ACE removida, SDDL original conferido byte a byte. NÃO conceder controle total em C:\Users nem reset recursivo por esta hipótese.
@@ -16,6 +16,14 @@ Estabilizar o Lenovo IdeaPad 320-15IKB Type 80YH como conjunto (Windows, AppX, d
 
 ## Portas de segurança
 Não fazer mudanças em BIOS/ME/EC/Secure Boot/TPM/SSD, driver boot, ACL de disco/Registro em massa ou Driver Verifier sem evidência específica, backup, recuperação e teste. Nunca enviar dump, Procmon CSV/PML, tokens ou configurações de sessão para este repositório público.
+
+## Auditoria transversal 24/09/2026 00:45–00:48 (nova evidência)
+- Leitura do arquivo local INSTRUCAO_MESTRA_DIAGNOSTICO_LENOVO.md e dos 20 anexos em dados.zip. Confirmado problema de Windows 11 -> Windows 10 -> Ubuntu -> Windows 10, mas logs brutos Ubuntu não vieram no ZIP. O artigo HackerDNA anexo é sobre enumeração de escalonamento; a enumeração NÃO prova invasão.
+- Token elevado: Administradores SID S-1-5-32-544, integridade alta S-1-16-12288; vários privilégios apresentados como Desativado são normais e habilitáveis sob demanda, não anomalia. SeImpersonatePrivilege e SeDebugPrivilege habilitados não demonstram exploit.
+- ACL de C:\\: usuário autenticado SID S-1-5-11 recebe (OI)(CI)(F) = FullControl com herança; várias pastas não protegidas herdam FullControl (ME, Intel, ESD, $WINDOWS.~BT, Win10-ISO etc.). Pastas C:\\Windows, Program Files, System32 e System32\\config têm ACL protegidas e não herdaram essa concessão. Estado da ACL raiz é anomalia de segurança; NÃO a remover recursivamente sem backup externo e recuperação. Há firmware tools FWUpdLcl*.exe em C:\\ME; não executados.
+- Quatro serviços LocalSystem tinham ImagePath sem aspas sob C:\\Program Files... (Odoo, Codex Sandbox, PC Manager, WslInstaller). C:\\Program.exe não existia, exploração não comprovada. Corrigidos os QUATRO ImagePath com aspas e preservados os tipos de registro; executáveis existentes, serviços previamente Running continuam Running, WslInstaller previamente Stopped continua Stopped. Backups de registro e SDDL da raiz guardados LOCALMENTE em C:\\Users\\cryst\\Desktop\\projetos\\problemas\\Auditoria_Seguranca_20260924. Não publicou backups nem tokens no GitHub.
+- Both AlwaysInstallElevated machine/user = NOT_SET; Windows Defender AV e RTP habilitados, PnP presentes sem falhas, C: não dirty; WD Green HealthStatus=Healthy NÃO invalida Event129. SHA256 e Authenticode válidos para iaStorAC.sys, TeeDriverW8x64.sys, combase.dll, twinapi.appcore.dll, SearchApp.exe, ScreenClipping.dll. Não equivale a auditoria de todos os arquivos/DriverStore nem a hash remoto OEM.
+- Arquivo temporário DPAPI CodexClipProbe.cred.xml ainda presente, 997 bytes, conteúdo NÃO aberto; havia revisão externa que bloqueou exclusão. Necessita destinação segura após confirmação de seu uso, nunca publicar.
 
 ## Próxima decisão
 Separar: (a) crash AppX Search/Captura (teste funcional/logs e possível perfil do Windows), (b) corrupção de memória e firmware pendentes de isolamento seguro, (c) atualização upstream do Desktop Commander. Preservar resultados negativos — re-registro e ACL C:\Users ReadAttributes não corrigiram Captura. Consolidar evidências sem dizer que tudo foi resolvido.
